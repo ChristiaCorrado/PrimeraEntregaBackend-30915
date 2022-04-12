@@ -15,7 +15,7 @@ routerCarrito.post("/cart", async (req, res) => {
 
 routerCarrito.delete("/cart/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const cart = await cartC.deleteById(id);
+  const cart = await cartC.deleteCartById(id);
   res.json(cart);
 });
 
@@ -35,7 +35,7 @@ routerCarrito.post("/cart/:id/productos", async (req, res) => {
 routerCarrito.delete("/cart/:id/productos/:productId", async (req, res) => {
   const id = parseInt(req.params.id);
   const productId = parseInt(req.params.productId);
-  const cart = await cartC.deleteProductFromCartById(id, productId);
+  const cart = await cartC.deleteProductCartById(id, productId);
   res.json(cart);
 });
 
