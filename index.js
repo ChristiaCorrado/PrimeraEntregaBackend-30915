@@ -8,6 +8,9 @@ const io = new IOServer(httpServer)
 const routerProductos = require("./routes/allProducts.js")
 const routerCarrito = require("./routes/carts.js")
 
+let knex = require("knex")({
+  client: 'sqlite3',
+  connection: {filename: './dataBase/ecommerce.sqlite'}},)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,3 +24,5 @@ const connectedServer = httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${connectedServer.address().port}`)
   })
   connectedServer.on('error',(error) => {console.log(`error: ${error.message}`)})  
+
+

@@ -1,5 +1,10 @@
 const fs = require('fs');
 
+//sql
+let knex = require("knex")({
+  client: 'sqlite3',
+  connection: {filename: './dataBase/ecommerce.sqlite'}},)
+
 class Productos{
 
     constructor(id, title, description, stock, price, thumbnail) {
@@ -20,7 +25,7 @@ class Productos{
             if(elem.title != " ")
             suport.push(elem)
           });
-          console.log(suport);
+          
           return suport
         } catch (error) {
           return console.log( `hay error ${error.message}`)
@@ -126,6 +131,33 @@ class Productos{
          console.log(`error en actualizar producto ${error.message}`);
         }
       }
+
+      //sql
+
+      async crearTablaProducto()  {
+
+        try {
+            const tablaProductos = await knex.schema.hasTable('productos')
+            if (tablaProductos) {
+                console.log(`La tabla productos ya se encuentra creada`);
+            }
+            else {
+                await knex.schema.createTable('productos', (table) =>{
+                    table.increments('id'),
+                    table.string('title', 200).notNullable(),
+                    table.float('price').notNullable(),
+                    table.string('description',200).notNullable(),
+                    table.timestamp('timestamp')
+                    table.string('thumbnail',200).notNullable(),
+                    table.integer('stock').notNullable()
+                })
+                console.log(`La tabla productos fue Creada`)
+            }
+        }catch (err) {
+            console.log(`hay un error en funcion crearTablaProducto ${err.message}`);
+        }
+    
+    }
 }
 
 module.exports = Productos

@@ -1,13 +1,15 @@
 {
   "name": "primeraentrega-coder-30915",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "dependencies": {
     "express": "^4.17.3",
+    "knex": "^0.95.15",
+    "mysql": "^2.18.1",
     "node": "^17.7.2",
     "nodemon": "^2.0.15",
-    "socket.io": "^4.4.1"
+    "socket.io": "^4.4.1",
+    "sqlite3": "^5.0.3"
   },
   "devDependencies": {},
   "scripts": {
@@ -16,5 +18,15 @@
     "build": "webpack ./a1.js ./a2.js ./a3.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChristiaCorrado/PrimeraEntregaBackend-30915.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/ChristiaCorrado/PrimeraEntregaBackend-30915/issues"
+  },
+  "homepage": "https://github.com/ChristiaCorrado/PrimeraEntregaBackend-30915#readme",
+  "description": ""
 }
