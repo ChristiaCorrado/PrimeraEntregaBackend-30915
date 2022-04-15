@@ -1,9 +1,10 @@
 const fs = require('fs');
 
-//sql
-let knex = require("knex")({
-  client: 'sqlite3',
-  connection: {filename: './dataBase/ecommerce.sqlite'}},)
+//sql import
+const { options } = require("../dataBase/options/mariaDB");
+
+const knex = require("knex")(options);
+
 
 class Productos{
 
@@ -19,8 +20,10 @@ class Productos{
 
       async getAll() {
         try{
-          let productObtenidos = JSON.parse(await fs.promises.readFile(`./data/productos.txt`,'utf-8'))
+          let productObtenidos = await this.readProducts
+          console.log(productObtenidos);
           const suport = []
+          
           productObtenidos.forEach(elem => {
             if(elem.title != " ")
             suport.push(elem)
@@ -40,8 +43,7 @@ class Productos{
           let newid = parseInt(data[lastIndex].id)
           newid++
           newProduct.id = newid
-          data.push(newProduct)
-          fs.promises.writeFile("./data/productos.txt", JSON.stringify(data));
+          this.addProductosSQL(newProduct)
         }catch (error){
           console.log(error);
 
@@ -134,6 +136,28 @@ class Productos{
 
       //sql
 
+    
+
+      addProductosSQL = (data) => {
+        knex('productos').insert(data).then(()=>{
+          console.log(`productos agregados a sqlite3`);
+        }).catch( (err) =>{
+          console.log(`error en iniciar tabla ${err.message}`);
+        })
+      }
+
+      readProducts = () => {
+        knex('productos').select('*').then((data) => {
+          
+          let productosDB = this.baseJsonProductos(data)
+          
+          return productosDB
+
+        }).catch( (err) =>{
+          console.log(`error en iniciar tabla ${err.message}`);
+        })
+      }
+
       async crearTablaProducto()  {
 
         try {
@@ -153,11 +177,56 @@ class Productos{
                 })
                 console.log(`La tabla productos fue Creada`)
             }
-        }catch (err) {
-            console.log(`hay un error en funcion crearTablaProducto ${err.message}`);
+            }catch (err) {
+                console.log(`hay un error en funcion crearTablaProducto ${err.message}`);
+            }
         }
+
+        async  crearTablaOrders(){
+        try {
+            const tablaOrders = await knex.schema.hasTable('orders');
+            if (tablaOrders) {
+                console.log(`La tabla carrito ya  fue creada`);
+            } else {
     
-    }
+                await knex.schema.createTable('orders', (table)=>{
+                    table.increment('id'),
+                    table.string('products', 300),
+                    table.timestamp('timestamp')
+                })
+                console.log(`tabla orders creada`);
+            }
+        }catch(error){
+            console.log(`error en crearTablaOrders ${error.message}`);
+        }
+      }
+
+      baseJsonProductos = (data) => {
+        let allProductsSQL= {
+          id : this.id,
+          title : this.title,
+          timestamp : this.timestamp,
+          price : this.price,
+          stock : this.stock,
+          description : this.description
+        }
+
+        for (let registro of data) {
+            
+          allProductsSQL.id = registro.id
+          allProductsSQL.title = registro.title
+          allProductsSQL.timestamp = registro.timestamp
+          allProductsSQL.price = registro.price
+          allProductsSQL.stock = registro.stock
+          allProductsSQL.description = registro.description
+          }
+          return allProductsSQL;
+      }
+
+    
+
+    
+
 }
 
 module.exports = Productos

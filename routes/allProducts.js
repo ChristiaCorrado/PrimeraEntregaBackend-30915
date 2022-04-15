@@ -4,48 +4,15 @@ const product = new Productos();
 
 //express import
 const express = require("express");
-const { json } = require("express/lib/response");
 const routerProductos = express.Router();
 
-
-//sql import
-let knex = require("knex")({
-  client: 'sqlite3',
-  connection: {filename: './dataBase/ecommerce.sqlite'}},)
-
-
-
-
-
-const addProductosSQLite = (data) => {
-  knex('productos').insert(data).then(()=>{
-    console.log(`productos agregados a sqlite3`);
-  }).catch( (err) =>{
-    console.log(`error en iniciar tabla ${err.message}`);
-  })
-}
-
-const borrarNulls = () => {
-  knex('productos').where('description', null).del()
-  .then(() => {console.log(`todo borrado`);})
-  .catch( (err) => {console.log(`error ${err.message}`);})
-}
-
-const readProducts = () => {
-  knex('productos').select('*').then((data) => {
-    for (let registro of data) {
-      console.log(`${registro.id} ${registro.title} ${registro.timestamp} ${registro.price}`);
-      
-    }
-  }).catch( (err) =>{
-    console.log(`error en iniciar tabla ${err.message}`);
-  })
-}
+const CreadorDeTablas = require("../dataBase/startDB/createTable")
+const nuevaTabla = new CreadorDeTablas()
 
 
 routerProductos.get("/productos", async (req, res) => {
   allArticles = await product.getAll()
-  readProducts()
+  console.log(allArticles);
   res.json(allArticles)
 });
 
@@ -54,8 +21,9 @@ routerProductos.post("/productos", async (req, res) => {
   art.timestamp = Date.now();
   console.log(art);  
   addProductosSQLite(art)
-  const productIsSave = await product.saveNewProduct(art);
-  res.json(productIsSave);
+  
+  res.json(art);
+  
   console.log(`Producto grabado correctamente`);
 });
 

@@ -71,6 +71,15 @@ class CreadorDeTablas{
         }
     }
 
+    
+      
+    borrarNulls = () => {
+        knex('productos').where('description', null).del()
+        .then(() => {console.log(`todo borrado`);})
+        .catch( (err) => {console.log(`error ${err.message}`);})
+      }
+      
+    
 }
 
 
