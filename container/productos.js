@@ -20,7 +20,7 @@ class Productos{
 
       async getAll() {
         try{
-          const productObtenidos = [await this.readProducts()]
+          const productObtenidos = await this.readProducts()
           
           const suport = []
           productObtenidos.forEach(elem => {
@@ -55,6 +55,7 @@ class Productos{
       async getById(id) {
         try {
           const products = await this.getAll();
+          console.log(products);
           const indexProduct = products.findIndex((product) => product.id == id);
           if (indexProduct === -1) {
             return console.log(`producto no encontrado`);
@@ -127,7 +128,7 @@ class Productos{
     
           products[indexProduct] = productToBeUpdated;
     
-          await fs.promises.writeFile('./data/productos.txt', JSON.stringify(products));
+          this.updateProductSQL(id, newProduct)
 
           console.log(`producto actualizado correctamente`);
 
@@ -160,6 +161,16 @@ class Productos{
         })
         
         return todosLosP
+      }
+
+      updateProductSQL = (idTo,newUpdate) =>{
+        console.log(idTo);
+        console.log(newUpdate);
+        knex('productos').where(idTo).update(newUpdate).then(()=>{
+          console.log(`producto actualizado`);
+        }).catch( (err) =>{
+          console.log(`error en actualizar sql ${err.message}`);
+        })
       }
 
       async crearTablaProducto()  {
