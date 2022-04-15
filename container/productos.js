@@ -20,10 +20,9 @@ class Productos{
 
       async getAll() {
         try{
-          let productObtenidos = await this.readProducts
-          console.log(productObtenidos);
-          const suport = []
+          const productObtenidos = [await this.readProducts()]
           
+          const suport = []
           productObtenidos.forEach(elem => {
             if(elem.title != " ")
             suport.push(elem)
@@ -38,14 +37,17 @@ class Productos{
       async saveNewProduct(newProduct){
         try {
           const data = await this.getAll()
+          console.log(data);
           const lastIndex = data.length-1
-          console.log(data[lastIndex].id);
+        
           let newid = parseInt(data[lastIndex].id)
           newid++
           newProduct.id = newid
+          console.log(newProduct);
           this.addProductosSQL(newProduct)
+          
         }catch (error){
-          console.log(error);
+          console.log(`saveNewProducto ${error.message}`);
 
         }
       }
@@ -140,22 +142,24 @@ class Productos{
 
       addProductosSQL = (data) => {
         knex('productos').insert(data).then(()=>{
-          console.log(`productos agregados a sqlite3`);
+          console.log(`productos agregados a MariaDB`);
         }).catch( (err) =>{
           console.log(`error en iniciar tabla ${err.message}`);
         })
       }
 
       readProducts = () => {
-        knex('productos').select('*').then((data) => {
+        const todosLosP = knex('productos').select('*').then((data) => {
           
-          let productosDB = this.baseJsonProductos(data)
+        const productosDB =  this.baseJsonProductos(data)
           
-          return productosDB
+        return productosDB
 
         }).catch( (err) =>{
-          console.log(`error en iniciar tabla ${err.message}`);
+          return console.log(`error en iniciar tabla ${err.message}`);
         })
+        
+        return todosLosP
       }
 
       async crearTablaProducto()  {
@@ -202,24 +206,10 @@ class Productos{
       }
 
       baseJsonProductos = (data) => {
-        let allProductsSQL= {
-          id : this.id,
-          title : this.title,
-          timestamp : this.timestamp,
-          price : this.price,
-          stock : this.stock,
-          description : this.description
-        }
 
-        for (let registro of data) {
-            
-          allProductsSQL.id = registro.id
-          allProductsSQL.title = registro.title
-          allProductsSQL.timestamp = registro.timestamp
-          allProductsSQL.price = registro.price
-          allProductsSQL.stock = registro.stock
-          allProductsSQL.description = registro.description
-          }
+        console.log(data);
+        const allProductsSQL = data.map((product)=>{return product})
+
           return allProductsSQL;
       }
 

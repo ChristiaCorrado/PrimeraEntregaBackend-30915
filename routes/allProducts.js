@@ -11,6 +11,7 @@ const nuevaTabla = new CreadorDeTablas()
 
 
 routerProductos.get("/productos", async (req, res) => {
+  product.crearTablaProducto()
   allArticles = await product.getAll()
   console.log(allArticles);
   res.json(allArticles)
@@ -20,8 +21,8 @@ routerProductos.post("/productos", async (req, res) => {
   const art = req.body
   art.timestamp = Date.now();
   console.log(art);  
-  addProductosSQLite(art)
-  
+  product.saveNewProduct(art)
+  console.log(art);
   res.json(art);
   
   console.log(`Producto grabado correctamente`);
