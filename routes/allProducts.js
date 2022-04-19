@@ -19,7 +19,7 @@ routerProductos.get("/productos", async (req, res) => {
 
 routerProductos.post("/productos", async (req, res) => {
   const art = req.body
-  art.timestamp = Date.now();
+  art.timestamp = Date.now()
   console.log(art);  
   product.saveNewProduct(art)
   console.log(art);

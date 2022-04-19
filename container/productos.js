@@ -38,10 +38,16 @@ class Productos{
         try {
           const data = await this.getAll()
           console.log(data);
+          let newid 
           const lastIndex = data.length-1
+          if(data.length != 0){
+            newid = parseInt(data[lastIndex].id)
+            newid++
+            
+          }else{
+            newid = 1
+          }
         
-          let newid = parseInt(data[lastIndex].id)
-          newid++
           newProduct.id = newid
           console.log(newProduct);
           this.addProductosSQL(newProduct)
@@ -73,17 +79,12 @@ class Productos{
       async deleteById(id) {
         try {
             
-          const limpiarProducto = {
-            title : " ",
-            price :" " ,
-            description : " ",
-            stock : " ",
-            thumbnail : " ",
-            timestamp : Date.now(),
 
-          }
-
-          this.actualizarById(id, limpiarProducto)
+          knex.from('productos').where(`id`,`=`,`${id}`).del()
+          .then(()=> console.log( `producto id No ${id} borrado`) )
+          .catch(error => console.log(error.message))
+          
+          
           
         } catch (error) {
           console.log(error.message);;

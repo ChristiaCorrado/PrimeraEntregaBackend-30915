@@ -1,10 +1,12 @@
 
 class CreadorDeTablas{
-    constructor(tablaProductos,tablaOrders,tablaCarrito){
+    constructor(tablaProductos,tablaOrders,tablaCarrito, tablaChat){
 
         this.tablaProductos = tablaProductos;
         this.tablaOrders = tablaOrders;
+        this.tablaChat = tablaChat;
         this.tablaCarrito = tablaCarrito
+
     }
 
     async crearTablaProducto()  {
@@ -73,12 +75,23 @@ class CreadorDeTablas{
 
     
       
-    borrarNulls = () => {
-        knex('productos').where('description', null).del()
-        .then(() => {console.log(`todo borrado`);})
-        .catch( (err) => {console.log(`error ${err.message}`);})
-      }
-      
+    async crearTablaChat(){
+        try {
+            const tablaChat = await knex.schema.createTable('chat')
+            if (tablaChat) {
+                console.log(` La tabla Chat ya fue creada`);
+            }else{
+                await knex.schema.createTable('chat', ()=>{
+                    table.increment('nombre',100),
+                    table.email('email',2000),
+                    table.mensaje('mensaje',2000)
+                })
+                console.log(`Tabla carrito creada`)
+            }
+        }catch(err){
+            console.log(`error en crearTablaChat ${error.message}`);
+        }
+    }
     
 }
 
