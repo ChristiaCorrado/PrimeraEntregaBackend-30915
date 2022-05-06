@@ -59,7 +59,6 @@ io.on("connection", (socket) => {
   socket.on("new-message", (data) => {
     console.log(data);
     messages.push(data);
-    fs.promises.writeFile('./dataBase/chat.txt', messages)
     io.sockets.emit("messages", messages);
   });
 });
