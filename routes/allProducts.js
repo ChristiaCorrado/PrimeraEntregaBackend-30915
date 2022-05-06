@@ -14,7 +14,7 @@ routerProductos.get("/productos", async (req, res) => {
   product.crearTablaProducto()
   allArticles = await product.getAll()
   console.log(allArticles);
-  res.json(allArticles)
+  res.render('allProducts', {allArticles})
 });
 
 routerProductos.post("/productos", async (req, res) => {

@@ -86,13 +86,15 @@ class CreadorDeTablas{
                     table.email('email',2000),
                     table.mensaje('mensaje',2000)
                 })
-                console.log(`Tabla carrito creada`)
+                console.log(`Tabla chat creada`)
             }
         }catch(err){
-            console.log(`error en crearTablaChat ${error.message}`);
+            console.log(`error en crearTablaChat ${err.message}`);
         }
     }
     
+   
+
 }
 
 

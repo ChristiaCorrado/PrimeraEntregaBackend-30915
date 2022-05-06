@@ -1,10 +1,9 @@
-const fs = require('fs');
-
 //sql import
 const { options } = require("../dataBase/options/mariaDB");
 
 const knex = require("knex")(options);
 
+const getTime = require('../src/lib/utils')
 
 class Productos{
 
@@ -15,7 +14,7 @@ class Productos{
         this.stock = parseInt(stock);
         this.thumbnail = thumbnail;
         this.id = id;
-        this.timestamp = Date.now();
+        this.timestamp = getTime();
       }
 
       async getAll() {
