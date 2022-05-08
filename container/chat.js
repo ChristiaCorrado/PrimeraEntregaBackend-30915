@@ -1,47 +1,39 @@
+const fs = require("fs");
+
 class ChatSocket {
-    constructor(nombre,email,mensaje){
-        
-        this.nombre = nombre;
-        this.email = email;
-        this.mensaje = mensaje;
+  constructor() {}
+
+  async readMessages() {
+    try {
+     
+      const mensajes = JSON.parse( await fs.promises.readFile("./dataBase/chat.txt", "utf8"))
+      console.log(mensajes);
+      
+      return mensajes;
+    } catch (err) {
+      console.log(err.message);
     }
+  }
 
-    async getAllMessages() {
-        try{
-          const todoslosMensajes = await this.readMessages()
-          
-          const suport = []
-          todoslosMensajes.forEach(elem => {
-            if(elem.mensaje != " ")
-            suport.push(elem)
-          });
-          
-          return suport
-        } catch (error) {
-          return console.log( `hay error ${error.message}`)
-        }
-      } 
+  async saveMessages(mensaje) {
+    try {
+      const chat = await this.readMessages();
+      const newChat = [...chat, mensaje];
+      console.log(newChat);
+      await fs.promises.writeFile('./dataBase/chat.txt',JSON.stringify(newChat ,null,2))
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
 
+  baseJson = (data) => {
+    console.log(data);
+    const allMensajes = data.map((chat) => {
+      return chat;
+    });
 
-      readMessages() {
-        const todosLosMensajes = knex('chat').select('*').then((data) => {
-          
-            const mensajesDB =  this.baseJson(data)
-              
-            return mensajesDB
-    
-            }).catch( (err) =>{
-              return console.log(`error en iniciar tabla ${err.message}`);
-            })
-            
-            return todosLosP
-          }
-
-    baseJson = (data) => {
-
-            console.log(data);
-            const allMensajes = data.map((chat)=>{return chat})
-    
-              return allMensajes;
-          }
+    return allMensajes;
+  };
 }
+
+module.exports = ChatSocket;

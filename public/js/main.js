@@ -5,14 +5,14 @@ const socket = io.connect();
 function render(data) {
     const html = data.map((elem, index) => {
         return(`<div>
-            <strong style="color: blue">${elem.author}</strong>:
+            <strong style="color: blue">${elem.author.nombre}</strong>:
             <em style="color: green">${elem.text}</em> </div>`)
     }).join(" ");
     document.getElementById('messages').innerHTML = html;
 }
 
 
-socket.on('messages', function(data) { render(data); });
+socket.on('messages', function(data) { console.log(data); render(data); });
 
 function addMessage(e) {
     const mensaje = {

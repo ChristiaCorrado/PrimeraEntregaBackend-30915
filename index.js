@@ -11,7 +11,8 @@ const tablaChat = new CreadorDeTablas();
 const routerProductos = require("./routes/allProducts.js");
 const routerCarrito = require("./routes/carts.js");
 const routerProductoTest = require("./routes/producto-test")
-const optionsSqlite = require("./dataBase/options/sqliteDB");
+const chatSocket = require("./container/chat")
+const chat = new chatSocket
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -42,13 +43,24 @@ connectedServer.on("error", (error) => {
 });
 
 
+//// soket
+const dataM = []
 
-const messages =  []
+const messages = chat.readMessages()
+  .then(data => {
+    console.log(data);
+    dataM.push(...data)
+    
+  });
+
+
+
 
 
 io.on("connection", (socket) => {
   console.log("SE CONECTO UN USUARIO");
-  socket.emit("messages", messages);
+  console.log(dataM);
+  socket.emit("messages", dataM);
 
   socket.on("mensaje", (data) => {
     mensajes.push(data);
@@ -58,7 +70,7 @@ io.on("connection", (socket) => {
 
   socket.on("new-message", (data) => {
     console.log(data);
-    messages.push(data);
+    chat.saveMessages(data)
     io.sockets.emit("messages", messages);
   });
 });
